@@ -17,3 +17,5 @@ Ardından `http://localhost:8000` açın.
 GitHub'da **Settings → Pages → Deploy from a branch → main / root** seçin.
 
 Komutlar `data/commands.json` içindedir; yeni içerik eklemek için yalnızca bu dosyayı düzenlemek yeterlidir.
+
+<!-- pages-trigger: 2026-10-05 -->
