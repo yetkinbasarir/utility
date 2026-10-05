@@ -1,1 +1,214 @@
-:root{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif;background:#f4f4f0;color:#111}*{box-sizing:border-box}body{margin:0;max-width:1100px;padding:48px 24px 80px;margin:auto}header p{font:12px ui-monospace,monospace;letter-spacing:.12em}h1{font-size:clamp(44px,8vw,84px);letter-spacing:-.05em;margin:12px 0 28px}input{width:100%;padding:16px;border:1px solid #ccc;font-size:16px}nav{display:flex;gap:8px;overflow:auto;padding:16px 0}button{border:1px solid #ccc;background:white;padding:8px 12px;cursor:pointer}button.active{background:#111;color:white}main{display:grid;grid-template-columns:1fr 1fr;gap:14px}.card{background:white;border:1px solid #d8d8d0;padding:18px}.meta{font:11px ui-monospace,monospace;text-transform:uppercase}.card h2{font-size:22px;margin:18px 0 8px}.card p{color:#666;line-height:1.45}.code{display:grid;grid-template-columns:1fr auto;background:#111;color:white}.code code{padding:14px;white-space:pre;overflow:auto;font:12px ui-monospace,monospace}.code button{border:0;border-left:1px solid #444;background:#111;color:white}.badge{margin-left:8px;color:#a34d00}@media(max-width:720px){main{grid-template-columns:1fr}}
+:root{
+  --ink:#201663;
+  --electric:#1118ff;
+  --panel-text:#21165f;
+  --max:1280px;
+  --pad:clamp(28px,8vw,128px);
+  --display:"Arial Narrow","Helvetica Neue Condensed Bold","Roboto Condensed",Arial,sans-serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+
+*{box-sizing:border-box}
+html{background:var(--ink);scroll-behavior:smooth}
+body{margin:0;background:var(--ink);color:var(--electric);font-family:var(--sans);font-size:20px}
+button,a{font:inherit}
+button{color:inherit}
+
+.shell{
+  width:min(100%,var(--max));
+  margin:0 auto;
+  padding-left:var(--pad);
+  padding-right:var(--pad);
+}
+
+.site-header{padding:20px 0 42px}
+.header-row{display:flex;align-items:flex-start;justify-content:space-between;gap:40px}
+.site-header h1{
+  margin:0;
+  font-family:var(--display);
+  font-size:clamp(38px,4vw,60px);
+  line-height:.92;
+  letter-spacing:-.055em;
+  font-stretch:condensed;
+  font-weight:900;
+}
+
+.toa{
+  display:flex;
+  align-items:flex-start;
+  gap:22px;
+  color:var(--electric);
+  text-decoration:none;
+  font-size:clamp(18px,1.7vw,25px);
+  line-height:1.12;
+  font-weight:650;
+}
+.toa-mark{
+  position:relative;
+  width:49px;height:49px;
+  border:11px solid var(--electric);
+  border-bottom-width:14px;
+  flex:0 0 auto;
+}
+.toa-mark:after{
+  content:"";
+  position:absolute;
+  width:21px;height:21px;
+  border-radius:50%;
+  background:var(--ink);
+  left:3px;top:3px;
+}
+.toa-mark i{
+  position:absolute;
+  width:4px;height:18px;
+  background:var(--ink);
+  left:12px;bottom:-14px;
+  z-index:2;
+}
+
+.category-index{
+  border-bottom:4px solid var(--electric);
+  padding:0 0 0;
+}
+.category-index h2,
+.section-label h2{
+  margin:0 0 18px;
+  font-size:clamp(24px,2.1vw,31px);
+  line-height:1;
+  font-weight:800;
+  letter-spacing:-.025em;
+}
+#cats{
+  display:flex;
+  flex-wrap:wrap;
+  gap:0;
+  padding-bottom:13px;
+}
+#cats button{
+  appearance:none;
+  border:0;
+  background:transparent;
+  padding:0;
+  cursor:pointer;
+  font-size:clamp(21px,2vw,29px);
+  line-height:1.2;
+  letter-spacing:-.025em;
+}
+#cats button:not(:last-child)::after{
+  content:" – ";
+  white-space:pre;
+}
+#cats button.active{font-weight:800}
+#cats button:hover,#cats button:focus-visible{text-decoration:underline;text-underline-offset:4px}
+
+.section-label{padding-top:68px;padding-bottom:9px}
+
+.command-list{border-bottom:4px solid var(--electric)}
+.command-item{
+  border-top:4px solid var(--electric);
+  background:var(--ink);
+  color:var(--electric);
+}
+.command-item.open{
+  background:var(--electric);
+  color:var(--panel-text);
+  border-top-color:var(--electric);
+}
+.command-inner{
+  width:min(100%,var(--max));
+  margin:0 auto;
+  padding-left:var(--pad);
+  padding-right:var(--pad);
+}
+.command-head{
+  width:100%;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(260px,.9fr);
+  gap:60px;
+  align-items:start;
+  border:0;
+  background:transparent;
+  padding:9px 0 8px;
+  text-align:left;
+  cursor:pointer;
+}
+.command-title{
+  font-size:clamp(23px,2vw,30px);
+  line-height:1.08;
+  font-weight:800;
+  letter-spacing:-.035em;
+}
+.command-description{
+  display:none;
+  font-size:clamp(20px,1.8vw,29px);
+  line-height:1.15;
+  letter-spacing:-.025em;
+  font-weight:400;
+}
+.open .command-head{padding-top:10px}
+.open .command-description{display:block}
+.flags{
+  display:inline-flex;
+  gap:8px;
+  margin-left:10px;
+  vertical-align:middle;
+  font:700 12px/1 var(--mono);
+  letter-spacing:.04em;
+}
+.flag{border:1px solid currentColor;padding:3px 5px}
+
+.command-body{display:none}
+.open .command-body{display:block;padding:7px 0 11px}
+.code-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:end;
+  gap:20px;
+}
+.code-row code{
+  display:block;
+  overflow-x:auto;
+  white-space:pre;
+  padding:4px 0 39px;
+  font-family:var(--mono);
+  font-size:clamp(21px,2vw,30px);
+  line-height:1.1;
+  letter-spacing:-.04em;
+}
+.copy{
+  appearance:none;
+  border:0;
+  background:transparent;
+  padding:0 0 3px;
+  cursor:pointer;
+  font-family:var(--display);
+  font-size:clamp(20px,1.7vw,27px);
+  font-weight:900;
+  letter-spacing:-.035em;
+}
+.copy:hover,.copy:focus-visible{text-decoration:underline;text-underline-offset:4px}
+.note{
+  margin:-18px 0 22px;
+  max-width:70ch;
+  font-size:14px;
+  line-height:1.35;
+}
+
+@media (max-width:760px){
+  :root{--pad:22px}
+  body{font-size:17px}
+  .site-header{padding:20px 0 34px}
+  .header-row{gap:18px}
+  .toa{font-size:14px;gap:10px}
+  .toa-mark{width:34px;height:34px;border-width:8px;border-bottom-width:10px}
+  .toa-mark:after{width:14px;height:14px;left:2px;top:2px}
+  .toa-mark i{left:8px;bottom:-10px;height:13px}
+  .section-label{padding-top:45px}
+  .command-head{grid-template-columns:1fr;gap:8px}
+  .open .command-head{padding-bottom:5px}
+  .command-description{font-size:18px}
+  .code-row{grid-template-columns:1fr}
+  .code-row code{padding-bottom:8px}
+  .copy{justify-self:end;padding-bottom:8px}
+}
