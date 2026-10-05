@@ -42,9 +42,9 @@ function renderCommands() {
 
   const items = data.filter(x => x.category === category);
 
-  items.forEach((x, index) => {
+  items.forEach(x => {
     const article = document.createElement("article");
-    article.className = "command-item" + (index < 2 ? " open" : "");
+    article.className = "command-item";
 
     const flags = [
       x.sudo ? '<span class="flag">SUDO</span>' : "",
@@ -53,7 +53,7 @@ function renderCommands() {
 
     article.innerHTML = `
       <div class="command-inner">
-        <button class="command-head" type="button" aria-expanded="${index < 2}">
+        <button class="command-head" type="button" aria-expanded="false">
           <span class="command-title">${escapeHTML(x.title)}${flags ? `<span class="flags">${flags}</span>` : ""}</span>
           <span class="command-description">${escapeHTML(x.description || "")}</span>
         </button>
@@ -71,8 +71,17 @@ function renderCommands() {
 
     const head = article.querySelector(".command-head");
     head.addEventListener("click", () => {
-      const open = article.classList.toggle("open");
-      head.setAttribute("aria-expanded", open ? "true" : "false");
+      const wasOpen = article.classList.contains("open");
+
+      list.querySelectorAll(".command-item.open").forEach(item => {
+        item.classList.remove("open");
+        item.querySelector(".command-head")?.setAttribute("aria-expanded", "false");
+      });
+
+      if (!wasOpen) {
+        article.classList.add("open");
+        head.setAttribute("aria-expanded", "true");
+      }
     });
 
     const copy = article.querySelector(".copy");
