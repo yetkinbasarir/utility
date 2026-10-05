@@ -1,4 +1,97 @@
-let data=[],cat='Tümü';const list=document.querySelector('#list'),q=document.querySelector('#q'),cats=document.querySelector('#cats');
-fetch('data/commands.json').then(r=>r.json()).then(d=>{data=d;filters();render()});
-function filters(){cats.innerHTML='';['Tümü',...new Set(data.map(x=>x.category))].forEach(c=>{let b=document.createElement('button');b.textContent=c;b.className=c===cat?'active':'';b.onclick=()=>{cat=c;filters();render()};cats.append(b)})}
-function render(){let s=q.value.toLocaleLowerCase('tr-TR');list.innerHTML='';data.filter(x=>(cat==='Tümü'||x.category===cat)&&JSON.stringify(x).toLocaleLowerCase('tr-TR').includes(s)).forEach(x=>{let a=document.createElement('article');a.className='card';a.innerHTML=`<div class="meta">${x.category}${x.sudo?'<span class="badge">SUDO</span>':''}${x.caution?'<span class="badge">DİKKAT</span>':''}</div><h2>${x.title}</h2><p>${x.description}</p><div class="code"><code></code><button>Kopyala</button></div>${x.note?`<p>${x.note}</p>`:''}`;a.querySelector('code').textContent=x.command;a.querySelector('button').onclick=async e=>{await navigator.clipboard.writeText(x.command);e.target.textContent='Kopyalandı';setTimeout(()=>e.target.textContent='Kopyala',1000)};list.append(a)})}q.oninput=render;
+let data = [];
+let category = "Dosyalar";
+
+const list = document.querySelector("#list");
+const cats = document.querySelector("#cats");
+const sectionTitle = document.querySelector("#section-title");
+
+fetch("data/commands.json")
+  .then(r => r.json())
+  .then(d => {
+    data = d;
+    if (!data.some(x => x.category === category)) category = data[0]?.category || "";
+    renderCategories();
+    renderCommands();
+  });
+
+function renderCategories() {
+  cats.innerHTML = "";
+  const categories = [...new Set(data.map(x => x.category))];
+
+  categories.forEach(name => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = name;
+    b.className = name === category ? "active" : "";
+    b.setAttribute("aria-pressed", name === category ? "true" : "false");
+
+    b.addEventListener("click", () => {
+      category = name;
+      renderCategories();
+      renderCommands();
+      document.querySelector("#content").scrollIntoView({behavior:"smooth", block:"start"});
+    });
+
+    cats.appendChild(b);
+  });
+}
+
+function renderCommands() {
+  sectionTitle.textContent = category;
+  list.innerHTML = "";
+
+  const items = data.filter(x => x.category === category);
+
+  items.forEach((x, index) => {
+    const article = document.createElement("article");
+    article.className = "command-item" + (index < 2 ? " open" : "");
+
+    const flags = [
+      x.sudo ? '<span class="flag">SUDO</span>' : "",
+      x.caution ? '<span class="flag">DİKKAT</span>' : ""
+    ].join("");
+
+    article.innerHTML = `
+      <div class="command-inner">
+        <button class="command-head" type="button" aria-expanded="${index < 2}">
+          <span class="command-title">${escapeHTML(x.title)}${flags ? `<span class="flags">${flags}</span>` : ""}</span>
+          <span class="command-description">${escapeHTML(x.description || "")}</span>
+        </button>
+        <div class="command-body">
+          <div class="code-row">
+            <code></code>
+            <button class="copy" type="button">KOPYALA</button>
+          </div>
+          ${x.note ? `<p class="note">${escapeHTML(x.note)}</p>` : ""}
+        </div>
+      </div>
+    `;
+
+    article.querySelector("code").textContent = x.command;
+
+    const head = article.querySelector(".command-head");
+    head.addEventListener("click", () => {
+      const open = article.classList.toggle("open");
+      head.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+
+    const copy = article.querySelector(".copy");
+    copy.addEventListener("click", async e => {
+      e.stopPropagation();
+      await navigator.clipboard.writeText(x.command);
+      copy.textContent = "KOPYALANDI";
+      setTimeout(() => copy.textContent = "KOPYALA", 1100);
+    });
+
+    list.appendChild(article);
+  });
+}
+
+function escapeHTML(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
