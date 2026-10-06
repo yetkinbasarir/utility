@@ -19,3 +19,5 @@ GitHub'da **Settings → Pages → Deploy from a branch → main / root** seçin
 Komutlar `data/commands.json` içindedir; yeni içerik eklemek için yalnızca bu dosyayı düzenlemek yeterlidir.
 
 <!-- pages-trigger: 2026-10-05 -->
+
+<!-- redeploy: 2026-10-06 clean-run -->
